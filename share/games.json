@@ -1,0 +1,14 @@
+{
+	"afo": {
+		"name": "Alien Front Online",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/afo.jpg"
+	},
+	"bomberman" : {
+		"name": "Bomberman Online",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/bomberman.jpg"
+	},
+	"planetring" : {
+		"name": "Planet Ring",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/planetring.jpg"
+	}
+}
