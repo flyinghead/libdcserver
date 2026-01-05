@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.18)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -26,6 +26,8 @@ set(DCSER_SOURCE
 	src/discord.cpp
 	src/status.cpp)
 
+target_include_directories(dcserver-static PRIVATE include)
+target_include_directories(dcserver PUBLIC PRIVATE include)
 target_sources(dcserver-static PRIVATE ${DCSER_SOURCE})
 target_sources(dcserver PRIVATE ${DCSER_SOURCE})
 
@@ -34,14 +36,6 @@ target_link_libraries(dcserver PRIVATE CURL::libcurl)
 
 set_target_properties(dcserver-static PROPERTIES OUTPUT_NAME "dcserver" ) 
 
-target_sources(dcserver-static PUBLIC
-	FILE_SET HEADERS
-	BASE_DIRS include
-	FILES ${DCSER_HEADERS})
-target_sources(dcserver PUBLIC
-	FILE_SET HEADERS
-	BASE_DIRS include
-	FILES ${DCSER_HEADERS})
 set_target_properties(dcserver PROPERTIES PUBLIC_HEADER "${DCSER_HEADERS}")
 
 install(TARGETS dcserver PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/dcserver")
