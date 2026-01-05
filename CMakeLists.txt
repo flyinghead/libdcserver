@@ -18,6 +18,7 @@ target_compile_definitions(dcserver PRIVATE DATADIR="${CMAKE_INSTALL_FULL_DATARO
 
 set(DCSER_HEADERS
 	include/discord.h
+	include/discord.hpp
 	include/json.hpp
 	include/status.h
 	include/strprintf.hpp)

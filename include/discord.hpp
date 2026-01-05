@@ -40,6 +40,6 @@ public:
 	{}
 };
 
-void discordSetWebhook(const std::string& url);
+void discordSetWebhook(std::string_view url);
 void discordNotif(const std::string& gameId, const Notif& notif);
 std::string discordEscape(std::string_view str);

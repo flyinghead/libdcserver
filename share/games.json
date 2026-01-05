@@ -10,5 +10,9 @@
 	"planetring" : {
 		"name": "Planet Ring",
 		"thumbnail": "https://dcnet.flyca.st/gamepic/planetring.jpg"
+	},
+	"wwp" : {
+		"name": "Worms World Party",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/wwp.jpg"
 	}
 }
