@@ -24,10 +24,16 @@
 #include <chrono>
 #include <fstream>
 #include <stdio.h>
+#include <set>
 
 #ifndef DATADIR
 #define DATADIR "/usr/local/share/dcnet"
 #endif
+#ifndef CONFDIR
+#define CONFDIR "/usr/local/etc/dcnet"
+#endif
+#define GAMES_FILE DATADIR "/games.json"
+#define CONF_FILE CONFDIR "/discord.conf"
 
 using namespace nlohmann;
 static constexpr int MAX_THREADS = 5;
@@ -35,6 +41,66 @@ static constexpr int MAX_THREADS = 5;
 static std::string webhook;
 static std::atomic_int threadCount;
 static json games;
+static std::set<std::string> disabledGames;
+static bool initialized;
+
+static void init()
+{
+	if (initialized)
+		return;
+	initialized = true;
+	std::ifstream ifs(GAMES_FILE);
+	if (ifs.fail())
+		throw DiscordException("Can't open " GAMES_FILE);
+	games = json::parse(ifs);
+
+	std::ifstream ifs2(CONF_FILE);
+	if (ifs2.fail())
+		throw DiscordException("Can't open " CONF_FILE);
+	std::string line;
+	while (std::getline(ifs2, line))
+	{
+		std::istringstream istr(line);
+		// Get key
+		istr >> std::ws;
+		std::string key;
+		if (!std::getline(istr, key, '='))
+			continue;
+		if (key[0] == '#' || key[0] == ';')
+			// comment
+			continue;
+		while (!key.empty() && std::isspace(key.back()))
+			key.pop_back();
+
+		// Get value
+		istr >> std::ws;
+		std::string value;
+		if (!std::getline(istr, value))
+			continue;
+		while (!value.empty() && std::isspace(value.back()))
+			value.pop_back();
+
+		if (key == "webhook") {
+			webhook = value;
+		}
+		else if (key == "disabled-games")
+		{
+			std::istringstream ivalues(value);
+			std::string gameId;
+			while (std::getline(ivalues, gameId, ','))
+			{
+				while (!gameId.empty() && std::isspace(gameId.back()))
+					gameId.pop_back();
+				if (!gameId.empty())
+					disabledGames.insert(gameId);
+				ivalues >> std::ws;
+			}
+		}
+		else {
+			fprintf(stderr, "Unrecognized key in discord.conf: %s\n", key.c_str());
+		}
+	}
+}
 
 static void postWebhook(std::string body)
 {
@@ -71,7 +137,8 @@ static void postWebhook(std::string body)
 
 void discordNotif(const std::string& gameId, const Notif& notif)
 {
-	if (webhook.empty())
+	init();
+	if (webhook.empty() || disabledGames.count(gameId) != 0)
 		return;
 	if (threadCount.fetch_add(1) >= MAX_THREADS) {
 		threadCount.fetch_sub(1);
@@ -105,17 +172,12 @@ void discordNotif(const std::string& gameId, const Notif& notif)
 		{ "embeds", embeds },
 	};
 
-	std::thread thread(postWebhook, jnotif.dump(4));
+	std::thread thread(postWebhook, jnotif.dump(4, ' ', false, json::error_handler_t::replace));
 	thread.detach();
 }
 
-void discordSetWebhook(std::string_view url)
-{
-	webhook = url;
-	std::ifstream ifs(DATADIR "/games.json");
-	if (ifs.fail())
-		throw DiscordException("Can't open " DATADIR "/games.json");
-	games = json::parse(ifs);
+void discordSetWebhook(std::string_view) {
+	init();
 }
 
 std::string discordEscape(std::string_view str)
@@ -137,9 +199,9 @@ std::string discordEscape(std::string_view str)
 extern "C"
 {
 
-void discordSetWebhook(const char *url) {
+void discordSetWebhook(const char *) {
 	try {
-		discordSetWebhook(std::string_view{ url });
+		init();
 	} catch (const std::exception& e) {
 		fprintf(stderr, "Discord initialization failed: %s\n", e.what());
 	}

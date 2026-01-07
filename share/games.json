@@ -1,4 +1,12 @@
 {
+	"aeroi": {
+		"name": "Aero Dancing i",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/aerodancing.jpg"
+	},
+	"aerof": {
+		"name": "Aero Dancing F",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/aerodancing-fsd.jpg"
+	},
 	"afo": {
 		"name": "Alien Front Online",
 		"thumbnail": "https://dcnet.flyca.st/gamepic/afo.jpg"
@@ -7,9 +15,117 @@
 		"name": "Bomberman Online",
 		"thumbnail": "https://dcnet.flyca.st/gamepic/bomberman.jpg"
 	},
+	"chuchu": {
+		"name": "ChuChu Rocket!",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/chuchu.jpg"
+	},
+	"culdcept" : {
+		"name": "Culdcept II",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/culdcept.jpg"
+	},
+	"daytona" : {
+		"name": "Daytona USA",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/daytona.jpg"
+	},
+	"deedee": {
+		"name": "Dee Dee Planet",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/ddplanet.jpg"
+	},
+	"f355": {
+		"name": "F355 Challenge",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/f355.jpg"
+	},
+	"floigan": {
+		"name": "Floigan Bros",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/floigan.jpg"
+	},
+	"golfshiyou2" : {
+		"name": "Golf Shiyou Yo 2",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/golfshiyou2.jpg"
+	},
+	"hundredswords" : {
+		"name": "Hundred Swords",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/hundredswords.jpg"
+	},
+	"igp" : {
+		"name": "Internet Game Pack",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/igp.jpg"
+	},
+	"monaco2" : {
+		"name": "Monaco Racing Simulation 2",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/monaco2.jpg"
+	},
+	"nba2k1" : {
+		"name": "NBA 2K1",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/nba2k1.jpg"
+	},
+	"nba2k2" : {
+		"name": "NBA 2K2",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/nba2k2.jpg"
+	},
+	"ncaa2k2" : {
+		"name": "NCAA 2K2",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/ncaa2k2.jpg"
+	},
+	"nexttetris" : {
+		"name": "The Next Tetris",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/nexttetris.jpg"
+	},
+	"nfl2k1" : {
+		"name": "NFL 2K1",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/nfl2k1.jpg"
+	},
+	"nfl2k2" : {
+		"name": "NFL 2K2",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/nfl2k2.jpg"
+	},
+	"oogabooga" : {
+		"name": "Ooga Booga",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/oogabooga.jpg"
+	},
+	"outtrigger" : {
+		"name": "Outtrigger",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/outtrigger.jpg"
+	},
 	"planetring" : {
 		"name": "Planet Ring",
 		"thumbnail": "https://dcnet.flyca.st/gamepic/planetring.jpg"
+	},
+	"pod" : {
+		"name": "POD: Speedzone",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/pod.jpg"
+	},
+	"powersmash" : {
+		"name": "Power Smash",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/powersmash.jpg"
+	},
+	"propeller" : {
+		"name": "Propeller Arena",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/propeller.jpg"
+	},
+	"yakyuunet" : {
+		"name": "Pro Yakyuu Team",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/yakyuunet.jpg"
+	},
+	"sdo" : {
+		"name": "Speed Devils Online",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/sdo.jpg"
+	},
+	"segatetris" : {
+		"name": "Sega Tetris",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/segatetris.jpg"
+	},
+	"starlancer" : {
+		"name": "Starlancer",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/starlancer.jpg"
+	},
+	"toyracer" : {
+		"name": "Toy Racer",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/toyracer.jpg"
+	},
+	"wsb2k2" : {
+		"name": "World Series Baseball 2K2",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/wsb2k2.jpg"
 	},
 	"wwp" : {
 		"name": "Worms World Party",
