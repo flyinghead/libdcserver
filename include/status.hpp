@@ -16,15 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
+#include <string_view>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-int statusGetInterval();
-int statusUpdate(const char *gameId, int playerCount, int gameCount);
-int statusCommit(const char *serverId);
-
-#ifdef __cplusplus
-}
-#endif
+extern "C" int statusGetInterval();
+void statusUpdate(std::string_view gameId, int playerCount, int gameCount);
+void statusCommit(std::string_view serverId);

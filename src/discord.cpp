@@ -18,7 +18,7 @@
 #include "discord.hpp"
 #include "strprintf.hpp"
 #include "json.hpp"
-#include <curl/curl.h>
+#include "internal.h"
 #include <atomic>
 #include <thread>
 #include <chrono>
@@ -57,83 +57,24 @@ static void init()
 	std::ifstream ifs2(CONF_FILE);
 	if (ifs2.fail())
 		throw DiscordException("Can't open " CONF_FILE);
-	std::string line;
-	while (std::getline(ifs2, line))
-	{
-		std::istringstream istr(line);
-		// Get key
-		istr >> std::ws;
-		std::string key;
-		if (!std::getline(istr, key, '='))
-			continue;
-		if (key[0] == '#' || key[0] == ';')
-			// comment
-			continue;
-		while (!key.empty() && std::isspace(key.back()))
-			key.pop_back();
-
-		// Get value
-		istr >> std::ws;
-		std::string value;
-		if (!std::getline(istr, value))
-			continue;
-		while (!value.empty() && std::isspace(value.back()))
-			value.pop_back();
-
-		if (key == "webhook") {
-			webhook = value;
-		}
-		else if (key == "disabled-games")
-		{
-			std::istringstream ivalues(value);
-			std::string gameId;
-			while (std::getline(ivalues, gameId, ','))
-			{
-				while (!gameId.empty() && std::isspace(gameId.back()))
-					gameId.pop_back();
-				if (!gameId.empty())
-					disabledGames.insert(gameId);
-				ivalues >> std::ws;
-			}
-		}
-		else {
-			fprintf(stderr, "Unrecognized key in discord.conf: %s\n", key.c_str());
-		}
-	}
+	Config config = loadConfig(ifs2);
+	if (config.count("webhook") != 0)
+		webhook = config["webhook"][0];
+	const auto& disabled = config["disabled-games"];
+	disabledGames = { disabled.begin(), disabled.end() };
 }
 
 static void postWebhook(std::string body)
 {
-	CURL *curl = curl_easy_init();
-	if (curl == nullptr) {
-		threadCount.fetch_sub(1);
-		fprintf(stderr, "Discord: can't create curl handle\n");
-		return;
+	try {
+		Http().post(webhook, body, "application/json");
+	} catch (const std::exception& e) {
+		fprintf(stderr, "Discord: %s\n", e.what());
+	} catch (...) {
+		fprintf(stderr, "Discord: Unknown error\n");
 	}
-	CURLcode res;
-	curl_easy_setopt(curl, CURLOPT_URL, webhook.c_str());
-	curl_easy_setopt(curl, CURLOPT_USERAGENT, "DCNet-DiscordWebhook");
-	curl_slist *headers = curl_slist_append(NULL, "Content-Type: application/json");
-	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-
-	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body.c_str());
-
-	res = curl_easy_perform(curl);
-	if (res != CURLE_OK) {
-		fprintf(stderr, "Discord: curl error: %d\n", res);
-	}
-	else
-	{
-		long code;
-		curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &code);
-		if (code < 200 || code >= 300)
-			fprintf(stderr, "Discord: HTTP error %ld\n", code);
-	}
-	curl_slist_free_all(headers);
-	curl_easy_cleanup(curl);
 	threadCount.fetch_sub(1);
 }
-
 
 void discordNotif(const std::string& gameId, const Notif& notif)
 {
@@ -178,6 +119,11 @@ void discordNotif(const std::string& gameId, const Notif& notif)
 
 void discordSetWebhook(std::string_view) {
 	init();
+}
+
+// for tests
+void discordForceWebhook(std::string_view url) {
+	webhook = url;
 }
 
 std::string discordEscape(std::string_view str)

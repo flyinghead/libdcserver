@@ -4,7 +4,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(dcserver LANGUAGES C CXX)
+option(BUILD_TEST "Builds unit tests" OFF)
+
 include(GNUInstallDirs)
+if(BUILD_TEST)
+	include(CTest)
+endif()
 
 find_package(CURL REQUIRED)
 
@@ -17,14 +22,20 @@ target_compile_definitions(dcserver-static PRIVATE DATADIR="${CMAKE_INSTALL_FULL
 target_compile_definitions(dcserver PRIVATE DATADIR="${CMAKE_INSTALL_FULL_DATAROOTDIR}/dcnet")
 
 set(DCSER_HEADERS
+	include/asio.hpp
+	include/database.hpp
 	include/discord.h
 	include/discord.hpp
 	include/json.hpp
+	include/shared_this.hpp
 	include/status.h
+	include/status.hpp
 	include/strprintf.hpp)
 
 set(DCSER_SOURCE
+	src/config.cpp
 	src/discord.cpp
+	src/http.cpp
 	src/status.cpp)
 
 target_include_directories(dcserver-static PRIVATE include)
@@ -32,8 +43,8 @@ target_include_directories(dcserver PUBLIC PRIVATE include)
 target_sources(dcserver-static PRIVATE ${DCSER_SOURCE})
 target_sources(dcserver PRIVATE ${DCSER_SOURCE})
 
-target_link_libraries(dcserver-static PRIVATE CURL::libcurl)
-target_link_libraries(dcserver PRIVATE CURL::libcurl)
+target_link_libraries(dcserver-static PRIVATE CURL::libcurl pthread)
+target_link_libraries(dcserver PRIVATE CURL::libcurl pthread)
 
 set_target_properties(dcserver-static PROPERTIES OUTPUT_NAME "dcserver" ) 
 
@@ -44,3 +55,8 @@ install(TARGETS dcserver-static)
 install(
 	FILES "${CMAKE_SOURCE_DIR}/share/games.json"
 	DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/dcnet")
+
+if(BUILD_TEST)
+	add_subdirectory(test)
+endif()
+

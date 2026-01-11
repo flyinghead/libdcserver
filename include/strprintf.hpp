@@ -17,7 +17,7 @@
 */
 #pragma once
 #include <string>
-#include <stdio.h>
+#include <cstdio>
 
 template<typename ... Args>
 std::string strprintf(const char *format, Args ... args)

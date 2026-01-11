@@ -16,15 +16,23 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 #pragma once
+#include <istream>
+#include <string>
+#include <string_view>
+#include <map>
+#include <vector>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+using Config = std::map<std::string, std::vector<std::string>>;
+Config loadConfig(std::istream& stream);
 
-int statusGetInterval();
-int statusUpdate(const char *gameId, int playerCount, int gameCount);
-int statusCommit(const char *serverId);
+class Http
+{
+public:
+	Http();
+	~Http();
+	void post(const std::string& url, std::string_view body, std::string_view contentType);
 
-#ifdef __cplusplus
-}
-#endif
+private:
+	using CURL = void;
+	CURL *curl = nullptr;
+};
