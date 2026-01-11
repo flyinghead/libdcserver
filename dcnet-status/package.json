@@ -1,0 +1,23 @@
+{
+  "name": "dcnet-status",
+  "version": "1.0.0",
+  "description": "Update html and json files for dcnet servers status",
+  "main": "src/index.js",
+  "bin": {
+    "dcnet-status": "src:index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
+    "dev": "npx tsc && node ."
+  },
+  "author": "Flyiinghead",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "@types/pug": "^2.0.10",
+    "pug": "^3.0.3",
+    "typescript": "^5.9.3"
+  }
+}
