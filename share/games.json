@@ -120,7 +120,11 @@
 		"thumbnail": "https://dcnet.flyca.st/gamepic/starlancer.jpg"
 	},
 	"toyracer" : {
-		"name": "Toy Racer",
+		"name": "Toy Racer (US)",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/toyracer.jpg"
+	},
+	"toyracer-eu" : {
+		"name": "Toy Racer (EU)",
 		"thumbnail": "https://dcnet.flyca.st/gamepic/toyracer.jpg"
 	},
 	"wsb2k2" : {
