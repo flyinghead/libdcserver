@@ -48,13 +48,12 @@ function loadStatus(path: string): Status[] | undefined {
 }
 
 try {
-    const statusDir = process.argv[2];
-    const destDir = process.argv[3];
+    const statusDir = process.argv[2] ?? "/var/lib/dcnet/status";
+    const destDir = process.argv[3] ?? "/var/www/dcnet/status";
     if (!statusDir || !destDir) {
-        console.error(`Usage: ${process.argv[1]} <status dir> <dest dir>`);
+        console.error(`Usage: ${process.argv[1]} [<status dir> [<dest dir>]]`);
         process.exit(1);
     }
-    console.log("Working...");
     const gameInfos: { [k: string]: GameInfo } = JSON.parse(fs.readFileSync('/usr/local/share/dcnet/games.json', 'utf8'));
     const now = Date.now() / 1000;
     var statusArray:Status[] = [];
@@ -99,7 +98,6 @@ try {
         statusArray: statusArray
     });
     fs.writeFileSync(destDir + '/' + "status.html", html);
-    console.log("Done");
 } catch (error) {
     logError(error, 'Error');
     process.exit(1);
