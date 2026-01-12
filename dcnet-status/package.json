@@ -4,7 +4,7 @@
   "description": "Update html and json files for dcnet servers status",
   "main": "src/index.js",
   "bin": {
-    "dcnet-status": "src:index.js"
+    "dcnet-status": "src/index.js"
   },
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
     "build": "npx tsc",
     "dev": "npx tsc && node ."
   },
-  "author": "Flyiinghead",
+  "author": "Flyinghead",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
     "@types/node": "^25.0.3",

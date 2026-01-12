@@ -4,6 +4,8 @@ export {}
 
 import process from 'node:process';
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import pug from 'pug';
 
 interface Status {
@@ -59,8 +61,8 @@ try {
     var statusArray:Status[] = [];
     const files = fs.readdirSync(statusDir);
     files.forEach(file => {
-        console.log('Loading ' + file);
-        var allStatus = loadStatus(statusDir + '/' + file);
+        //console.log('Loading ' + file);
+        var allStatus = loadStatus(path.join(statusDir, file));
         if (allStatus === undefined)
            return;
         if (!Array.isArray(allStatus)) {
@@ -73,7 +75,7 @@ try {
             && status.gameId != 'bomberman' 
             && status.gameId != 'propeller');
         allStatus.forEach(status => {
-            console.log(`game ${status.gameId}, timestamp ${status.timestamp}, players ${status.playerCount}`);
+            //console.log(`game ${status.gameId}, timestamp ${status.timestamp}, players ${status.playerCount}`);
             status.name = gameInfos[status.gameId]?.name;
             status.thumbnail = gameInfos[status.gameId]?.thumbnail;
             // Expect an update every 5 min. Assume the server is offline after 6 min.
@@ -93,11 +95,12 @@ try {
         else
             return g1.name!.localeCompare(g2.name!);
     });
-    fs.writeFileSync(destDir + '/' + "status.json", JSON.stringify(statusArray, undefined, 4));
-    const html = pug.renderFile('status.pug', {
+    fs.writeFileSync(path.join(destDir, 'status.json'), JSON.stringify(statusArray, undefined, 4));
+    const dirname = path.dirname(fileURLToPath(import.meta.url));
+    const html = pug.renderFile(path.join(dirname, '..', 'status.pug'), {
         statusArray: statusArray
     });
-    fs.writeFileSync(destDir + '/' + "status.html", html);
+    fs.writeFileSync(path.join(destDir, 'status.html'), html);
 } catch (error) {
     logError(error, 'Error');
     process.exit(1);
