@@ -55,8 +55,10 @@ static void init()
 	games = json::parse(ifs);
 
 	std::ifstream ifs2(CONF_FILE);
-	if (ifs2.fail())
-		throw DiscordException("Can't open " CONF_FILE);
+	if (ifs2.fail()) {
+		fprintf(stderr, "Can't open " CONF_FILE ". Discord integration disabled.\n");
+		return;
+	}
 	Config config = loadConfig(ifs2);
 	if (config.count("webhook") != 0)
 		webhook = config["webhook"][0];
