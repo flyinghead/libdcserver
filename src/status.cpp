@@ -26,8 +26,8 @@
 #include <fstream>
 #include <stdexcept>
 
-#ifndef STATUS_PATH
-#define STATUS_PATH "/var/lib/dcnet/status/"
+#ifndef STATUSDIR
+#define STATUSDIR "/var/local/lib/dcnet/status/"
 #endif
 #ifndef CONFDIR
 #define CONFDIR "/usr/local/etc/dcnet"
@@ -36,6 +36,7 @@
 
 static bool initialized;
 static std::string statusUrl;
+static std::string statusDir;
 static int updateInterval = 5 * 60; // default 5 min
 static nlohmann::json statusArray;
 
@@ -44,9 +45,11 @@ static nlohmann::json jsonStatus(std::string_view gameId, int playerCount, int g
 	nlohmann::json status = {
 		{ "gameId", gameId },
 		{ "timestamp", time(nullptr) },
-		{ "playerCount", playerCount },
-		{ "gameCount", gameCount },
 	};
+	if (playerCount >= 0)
+		status["playerCount"] = playerCount;
+	if (gameCount >= 0)
+		status["gameCount"] = gameCount;
 	return status;
 }
 
@@ -67,6 +70,12 @@ static void init()
 		if (v != 0)
 			updateInterval = v;
 	}
+	if (config.count("status-dir") != 0)
+		statusDir = config["status-dir"][0];
+	if (statusDir.empty())
+		statusDir = STATUSDIR;
+	if (statusDir.back() != '/')
+		statusDir += '/';
 }
 
 void statusUpdate(std::string_view gameId, int playerCount, int gameCount)
@@ -86,7 +95,7 @@ void statusCommit(std::string_view serverId)
 	}
 	else
 	{
-		std::string path = STATUS_PATH + std::string(serverId);
+		std::string path = statusDir + std::string(serverId);
 		FILE *f = fopen(path.c_str(), "w");
 		if (f == nullptr) {
 			perror(path.c_str());

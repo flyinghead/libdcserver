@@ -10,16 +10,20 @@ include(GNUInstallDirs)
 if(BUILD_TEST)
 	include(CTest)
 endif()
+if(NOT DEFINED LOCALSTATEDIR)
+	# CMAKE_INSTALL_FULL_LOCALSTATEDIR is /usr/local/var by default
+	set(LOCALSTATEDIR "/var/local")
+endif()
 
 find_package(CURL REQUIRED)
 
-add_library(dcserver-static STATIC)
 add_library(dcserver SHARED)
 
-target_compile_options(dcserver-static PRIVATE -Wall)
 target_compile_options(dcserver PRIVATE -Wall)
-target_compile_definitions(dcserver-static PRIVATE DATADIR="${CMAKE_INSTALL_FULL_DATAROOTDIR}/dcnet")
-target_compile_definitions(dcserver PRIVATE DATADIR="${CMAKE_INSTALL_FULL_DATAROOTDIR}/dcnet")
+target_compile_definitions(dcserver PRIVATE
+	DATADIR="${CMAKE_INSTALL_FULL_DATAROOTDIR}/dcnet"
+	CONFDIR="${CMAKE_INSTALL_FULL_SYSCONFDIR}/dcnet"
+	STATUSDIR="${LOCALSTATEDIR}/lib/dcnet/status")
 
 set(DCSER_HEADERS
 	include/asio.hpp
@@ -38,20 +42,14 @@ set(DCSER_SOURCE
 	src/http.cpp
 	src/status.cpp)
 
-target_include_directories(dcserver-static PRIVATE include)
 target_include_directories(dcserver PUBLIC PRIVATE include)
-target_sources(dcserver-static PRIVATE ${DCSER_SOURCE})
 target_sources(dcserver PRIVATE ${DCSER_SOURCE})
 
-target_link_libraries(dcserver-static PRIVATE CURL::libcurl pthread)
 target_link_libraries(dcserver PRIVATE CURL::libcurl pthread)
-
-set_target_properties(dcserver-static PROPERTIES OUTPUT_NAME "dcserver" ) 
 
 set_target_properties(dcserver PROPERTIES PUBLIC_HEADER "${DCSER_HEADERS}")
 
 install(TARGETS dcserver PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/dcserver")
-install(TARGETS dcserver-static)
 install(
 	FILES "${CMAKE_SOURCE_DIR}/share/games.json"
 	DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/dcnet")

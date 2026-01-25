@@ -39,11 +39,11 @@ html
                           span= status.name
                       td(class='status')
                         case status.playerCount
-                          when 0
-                            if status.online
-                              span(class='waiting') No player
-                            else
+                          when undefined
+                            if !status.online
                               span(class='inactive') Offline
+                          when 0
+                            span(class='waiting') No player
                           when 1
                             span(class='active') 1 player
                           default

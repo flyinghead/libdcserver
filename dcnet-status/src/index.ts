@@ -7,6 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pug from 'pug';
+import { getProperties } from 'properties-file';
 
 interface Status {
     gameId: string;
@@ -50,7 +51,12 @@ function loadStatus(path: string): Status[] | undefined {
 }
 
 try {
-    const statusDir = process.argv[2] ?? "/var/lib/dcnet/status";
+    var statusDir = "/var/local/lib/dcnet/status";
+    try {
+        const props = getProperties(fs.readFileSync('/usr/local/etc/dcnet/status.conf'));
+        statusDir = props["status-dir"] ?? statusDir;
+    } catch (error) {}
+    statusDir = process.argv[2] ?? statusDir;
     const destDir = process.argv[3] ?? "/var/www/dcnet/status";
     if (!statusDir || !destDir) {
         console.error(`Usage: ${process.argv[1]} [<status dir> [<dest dir>]]`);
@@ -81,8 +87,8 @@ try {
             // Expect an update every 5 min. Assume the server is offline after 6 min.
             status.online = now - status.timestamp < 6 * 60;
             if (!status.online) {
-                status.playerCount = 0;
-                status.gameCount = 0;
+                status.playerCount = undefined;
+                status.gameCount = undefined;
             }
         });
         statusArray = statusArray.concat(allStatus);
