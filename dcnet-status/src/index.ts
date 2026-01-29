@@ -75,15 +75,16 @@ try {
             console.error(`Content of ${file} isn't an array`);
             return;
         }
-        // Filter out non working games
+        // Filter out non working and unknown games
         allStatus = allStatus.filter(status => status.gameId !== 'culdcept' 
             && status.gameId !== 'yakyuunet' 
-            && status.gameId != 'bomberman' 
-            && status.gameId != 'propeller');
+            && status.gameId !== 'bomberman' 
+            && status.gameId !== 'propeller'
+            && gameInfos[status.gameId] !== undefined);
         allStatus.forEach(status => {
             //console.log(`game ${status.gameId}, timestamp ${status.timestamp}, players ${status.playerCount}`);
-            status.name = gameInfos[status.gameId]?.name;
-            status.thumbnail = gameInfos[status.gameId]?.thumbnail;
+            status.name = gameInfos[status.gameId]!.name;
+            status.thumbnail = gameInfos[status.gameId]!.thumbnail;
             // Expect an update every 5 min. Assume the server is offline after 6 min.
             status.online = now - status.timestamp < 6 * 60;
             if (!status.online) {
@@ -95,7 +96,8 @@ try {
     });
     statusArray = statusArray.sort((g1, g2) => {
         // put active games on top
-        const playerDiff = (g2.playerCount ? 1 : 0) - (g1.playerCount ? 1 : 0);
+        const playerDiff = (g2.playerCount || g2.gameCount ? 1 : 0)
+                    - (g1.playerCount || g1.gameCount ? 1 : 0);
         if (playerDiff != 0)
             return playerDiff;
         else
