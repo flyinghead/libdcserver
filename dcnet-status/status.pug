@@ -29,7 +29,7 @@ html
                     tr(class='alert' role='alert')
                       unless status.online
                         td ❌
-                      else if status.playerCount > 0
+                      else if status.playerCount > 0 || status.gameCount > 0
                         td 🔥
                       else
                         td ✅
