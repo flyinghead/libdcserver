@@ -79,7 +79,6 @@ try {
         allStatus = allStatus.filter(status => status.gameId !== 'culdcept' 
             && status.gameId !== 'yakyuunet' 
             && status.gameId !== 'bomberman' 
-            && status.gameId !== 'propeller'
             && gameInfos[status.gameId] !== undefined);
         allStatus.forEach(status => {
             //console.log(`game ${status.gameId}, timestamp ${status.timestamp}, players ${status.playerCount}`);
