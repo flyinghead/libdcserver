@@ -25,6 +25,8 @@
 #include <time.h>
 #include <fstream>
 #include <stdexcept>
+#include <memory>
+#include <pthread.h>
 
 #ifndef STATUSDIR
 #define STATUSDIR "/var/local/lib/dcnet/status/"
@@ -40,7 +42,7 @@ static std::string legacyStatusUrl;
 static std::string statusDir;
 static int updateInterval = 5 * 60; // default 5 min
 static nlohmann::json statusArray;
-static WorkerThread worker;
+static std::unique_ptr<WorkerThread> worker;
 
 static nlohmann::json jsonStatus(std::string_view gameId, int playerCount, int gameCount)
 {
@@ -55,11 +57,18 @@ static nlohmann::json jsonStatus(std::string_view gameId, int playerCount, int g
 	return status;
 }
 
+static void prefork() {
+	worker.reset();
+}
+
 static void init()
 {
 	if (initialized)
 		return;
 	initialized = true;
+	// mutexes and condition variables don't like forking
+	pthread_atfork(prefork, nullptr, nullptr);
+
 	std::ifstream ifs(CONF_FILE);
 	if (ifs.fail())
 		return;
@@ -157,7 +166,9 @@ namespace status
 
 static void httpPost(std::string url, std::string payload)
 {
-	worker.run([url, payload]() {
+	if (worker == nullptr)
+		worker = std::make_unique<WorkerThread>();
+	worker->run([url, payload]() {
 		Http().post(url, payload, "application/json");
 	});
 }
