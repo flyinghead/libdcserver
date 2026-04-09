@@ -29,6 +29,10 @@ Http::Http()
 		throw std::runtime_error("can't create curl handle");
 }
 
+static size_t receiveData(void *buffer, size_t size, size_t nmemb, void *arg) {
+	return nmemb * size;
+}
+
 void Http::post(const std::string& url, std::string_view body, std::string_view contentType)
 {
 	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -42,6 +46,8 @@ void Http::post(const std::string& url, std::string_view body, std::string_view 
 
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body.data());
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, body.size());
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, receiveData);
+	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 30);	// default is 300 s
 
 	CURLcode res = curl_easy_perform(curl);
 	curl_slist_free_all(headers);

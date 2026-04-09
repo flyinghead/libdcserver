@@ -25,6 +25,14 @@ int statusGetInterval();
 int statusUpdate(const char *gameId, int playerCount, int gameCount);
 int statusCommit(const char *serverId);
 
+void statusReset(const char *serverId);
+void statusPing(const char *serverId);
+void statusJoin(const char *gameId, const char *ip, int port, const char *playerName);
+void statusLeave(const char *gameId, const char *ip, int port, const char *playerName);
+void statusCreateGame(const char *gameId);
+void statusDeleteGame(const char *gameId);
+int statusPingInterval();
+
 #ifdef __cplusplus
 }
 #endif

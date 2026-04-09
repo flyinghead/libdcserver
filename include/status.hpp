@@ -21,3 +21,14 @@
 extern "C" int statusGetInterval();
 void statusUpdate(std::string_view gameId, int playerCount, int gameCount);
 void statusCommit(std::string_view serverId);
+
+namespace status
+{
+	void reset(std::string_view serverId);
+	void ping(std::string_view serverId);
+	int pingInterval();
+	void join(std::string_view gameId, std::string_view ip, int port, std::string_view playerName);
+	void leave(std::string_view gameId, std::string_view ip, int port, std::string_view playerName);
+	void createGame(std::string_view gameId);
+	void deleteGame(std::string_view gameId);
+}

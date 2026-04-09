@@ -21,6 +21,12 @@
 #include <string_view>
 #include <map>
 #include <vector>
+#include <memory>
+#include <condition_variable>
+#include <mutex>
+#include <thread>
+#include <queue>
+#include <functional>
 
 using Config = std::map<std::string, std::vector<std::string>>;
 Config loadConfig(std::istream& stream);
@@ -35,4 +41,20 @@ public:
 private:
 	using CURL = void;
 	CURL *curl = nullptr;
+};
+
+class WorkerThread
+{
+public:
+	WorkerThread();
+	~WorkerThread();
+
+	void run(std::function<void()>&& task);
+
+private:
+	std::unique_ptr<std::thread> thread;
+	std::queue<std::function<void()>> tasks;
+	std::condition_variable condition;
+	std::mutex mutex;
+	bool stopping = false;
 };

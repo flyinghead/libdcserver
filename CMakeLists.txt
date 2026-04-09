@@ -40,7 +40,8 @@ set(DCSER_SOURCE
 	src/config.cpp
 	src/discord.cpp
 	src/http.cpp
-	src/status.cpp)
+	src/status.cpp
+	src/thread.cpp)
 
 target_include_directories(dcserver PUBLIC PRIVATE include)
 target_sources(dcserver PRIVATE ${DCSER_SOURCE})

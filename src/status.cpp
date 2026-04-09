@@ -36,9 +36,11 @@
 
 static bool initialized;
 static std::string statusUrl;
+static std::string legacyStatusUrl;
 static std::string statusDir;
 static int updateInterval = 5 * 60; // default 5 min
 static nlohmann::json statusArray;
+static WorkerThread worker;
 
 static nlohmann::json jsonStatus(std::string_view gameId, int playerCount, int gameCount)
 {
@@ -63,7 +65,9 @@ static void init()
 		return;
 	Config config = loadConfig(ifs);
 	if (config.count("status-url") != 0)
-		statusUrl = config["status-url"][0];
+		legacyStatusUrl = config["status-url"][0];
+	if (config.count("mgmt-status-url") != 0)
+		statusUrl = config["mgmt-status-url"][0];
 	if (config.count("update-interval") != 0)
 	{
 		int v = atoi(config["update-interval"][0].c_str());
@@ -78,6 +82,9 @@ static void init()
 		statusDir += '/';
 }
 
+//
+// Legacy status
+//
 void statusUpdate(std::string_view gameId, int playerCount, int gameCount)
 {
 	init();
@@ -90,8 +97,8 @@ void statusCommit(std::string_view serverId)
 	if (statusArray.empty())
 		return;
 	std::string jsonstr = statusArray.dump(4);
-	if (!statusUrl.empty()) {
-		Http().post(statusUrl + '/' + std::string(serverId), jsonstr, "application/json");
+	if (!legacyStatusUrl.empty()) {
+		Http().post(legacyStatusUrl + '/' + std::string(serverId), jsonstr, "application/json");
 	}
 	else
 	{
@@ -141,3 +148,118 @@ int statusCommit(const char *serverId)
 }
 
 } // extern "C"
+
+//
+// New status
+//
+namespace status
+{
+
+static void httpPost(std::string url, std::string payload)
+{
+	worker.run([url, payload]() {
+		Http().post(url, payload, "application/json");
+	});
+}
+
+static void postId(const std::string& url, std::string_view id)
+{
+	nlohmann::json payload = { { "id", id } };
+	std::string jsonstr = payload.dump(4);
+	httpPost(url, jsonstr);
+}
+
+void reset(std::string_view serverId)
+{
+	init();
+	if (statusUrl.empty())
+		return;
+	postId(statusUrl + "/game/reset", serverId);
+}
+
+void ping(std::string_view serverId)
+{
+	init();
+	if (statusUrl.empty())
+		return;
+	postId(statusUrl + "/game/ping", serverId);
+}
+
+static void joinLeave(const std::string& url, std::string_view gameId, std::string_view ip, int port, std::string_view playerName)
+{
+	nlohmann::json payload = {
+		{ "id", gameId },
+		{ "ip", ip },
+		{ "port", port },
+	};
+	if (!playerName.empty())
+		payload["name"] = playerName;
+	std::string jsonstr = payload.dump(4);
+	httpPost(url, jsonstr);
+}
+
+void join(std::string_view gameId, std::string_view ip, int port, std::string_view playerName)
+{
+	init();
+	if (statusUrl.empty())
+		return;
+	joinLeave(statusUrl + "/game/join", gameId, ip, port, playerName);
+}
+
+void leave(std::string_view gameId, std::string_view ip, int port, std::string_view playerName)
+{
+	init();
+	if (statusUrl.empty())
+		return;
+	joinLeave(statusUrl + "/game/leave", gameId, ip, port, playerName);
+}
+
+void createGame(std::string_view gameId)
+{
+	init();
+	if (statusUrl.empty())
+		return;
+	postId(statusUrl + "/game/creategame", gameId);
+}
+
+void deleteGame(std::string_view gameId)
+{
+	init();
+	if (statusUrl.empty())
+		return;
+	postId(statusUrl + "/game/deletegame", gameId);
+}
+
+int pingInterval() {
+	init();
+	return updateInterval;
+}
+
+}
+
+extern "C"
+{
+
+void statusReset(const char *serverId) {
+	status::reset(serverId);
+}
+void statusPing(const char *serverId) {
+	status::ping(serverId);
+}
+void statusJoin(const char *gameId, const char *ip, int port, const char *playerName) {
+	status::join(gameId, ip, port, playerName == nullptr ? "" : playerName);
+}
+void statusLeave(const char *gameId, const char *ip, int port, const char *playerName) {
+	status::leave(gameId, ip, port, playerName == nullptr ? "" : playerName);
+}
+void statusCreateGame(const char *gameId) {
+	status::createGame(gameId);
+}
+void statusDeleteGame(const char *gameId) {
+	status::deleteGame(gameId);
+}
+int statusPingInterval() {
+	return status::pingInterval();
+}
+
+}
