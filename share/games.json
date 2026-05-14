@@ -135,6 +135,10 @@
 		"name": "Virtua Fighter 4",
 		"thumbnail": "https://dcnet.flyca.st/gamepic/vf4.jpg"
 	},
+	"virtualon" : {
+		"name": "Virtual-On: Oratorio Tangram",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/virtualon.jpg"
+	},
 	"wsb2k2" : {
 		"name": "World Series Baseball 2K2",
 		"thumbnail": "https://dcnet.flyca.st/gamepic/wsb2k2.jpg"
