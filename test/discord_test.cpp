@@ -13,6 +13,7 @@ TEST_F(DiscordTest, escape)
 	ASSERT_EQ("same", discordEscape("same"));
 	ASSERT_EQ("\\*\\_\\`\\~", discordEscape("*_`~"));
 	ASSERT_EQ("\\<\\>\\:\\[\\\\", discordEscape("<>:[\\"));
+	ASSERT_EQ("\\@\\|", discordEscape("@|"));
 	ASSERT_EQ("+\\*a\\>b\\_c\\:d", discordEscape("+*a>b_c:d"));
 }
 

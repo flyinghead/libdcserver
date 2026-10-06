@@ -150,5 +150,65 @@
 	"wwp" : {
 		"name": "Worms World Party",
 		"thumbnail": "https://dcnet.flyca.st/gamepic/wwp.jpg"
+	},
+	"mvsc2" : {
+		"name": "Marvel vs. Capcom 2",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/mvsc2.jpg"
+	},
+	"pstone2" : {
+		"name": "Power Stone 2",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/pstone2.jpg"
+	},
+	"sf3strike3" : {
+		"name": "Street Fighter III: 3rd Strike",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/sf3strike3.jpg"
+	},
+	"sfzero3" : {
+		"name": "Street Fighter Zero 3 for Matching Service",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/sfzero3.jpg"
+	},
+	"spawn" : {
+		"name": "Spawn",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/spawn.jpg"
+	},
+	"vampire" : {
+		"name": "Vampire Chronicle",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/vampire.jpg"
+	},
+	"nettennis" : {
+		"name": "Net de Tennis",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/nettennis.jpg"
+	},
+	"capvsnkmf" : {
+		"name": "Capcom vs. SNK: Millennium Fight 2000",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/capvsnkmf.jpg"
+	},
+	"jojo" : {
+		"name": "Jojo's Bizarre Adventure for Matching Service",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/jojo.jpg"
+	},
+	"pjustice" : {
+		"name": "Project Justice",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/pjustice.jpg"
+	},
+	"ssf2" : {
+		"name": "Super Street Fighter II X",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/ssf2.jpg"
+	},
+	"techromancer" : {
+		"name": "Tech Romancer for Matching Service",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/techromancer.jpg"
+	},
+	"taisenng" : {
+		"name": "Taisen Net Gimmick",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/taisenng.jpg"
+	},
+	"hmgeo" : {
+		"name": "Heavy Metal: Geomatrix",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/hmgeo.jpg"
+	},
+	"puzzle2" : {
+		"name": "Super Puzzle Fighter II X",
+		"thumbnail": "https://dcnet.flyca.st/gamepic/puzzle2.jpg"
 	}
 }
